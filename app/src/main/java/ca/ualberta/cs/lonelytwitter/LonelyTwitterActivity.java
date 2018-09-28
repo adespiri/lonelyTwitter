@@ -49,7 +49,6 @@ public class LonelyTwitterActivity extends Activity {
             public void onClick(View v) {
 
                 tweets.clear();
-                String text = bodyText.getText().toString();
                 saveInFile();
                 adapter.notifyDataSetChanged();
                 finish();
@@ -96,6 +95,7 @@ public class LonelyTwitterActivity extends Activity {
             Type listTweetType = new TypeToken<ArrayList<Tweet>>() {
             }.getType();
             tweets = gson.fromJson(reader, listTweetType);
+            fis.close();
 
 
         } catch (FileNotFoundException e) {
@@ -119,13 +119,14 @@ public class LonelyTwitterActivity extends Activity {
 		    Gson gson = new Gson();
 		    gson.toJson(tweets, writer);
 		    writer.flush();
+		    fos.close();
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			tweets = new ArrayList<String>();
+
 			e.printStackTrace();
 		}
 
