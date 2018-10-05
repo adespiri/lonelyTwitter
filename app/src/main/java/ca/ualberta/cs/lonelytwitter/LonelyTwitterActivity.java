@@ -84,6 +84,9 @@ public class LonelyTwitterActivity extends Activity {
 		adapter.notifyDataSetChanged();
 	}
 
+	/**
+	 * loads the old tweet list
+	 */
 	private void loadFromFile() {
 
         try {
@@ -109,7 +112,9 @@ public class LonelyTwitterActivity extends Activity {
     }
 
 
-	
+	/**
+	 * saves the tweet list
+	 */
 	private void saveInFile() {
 		try {
 
