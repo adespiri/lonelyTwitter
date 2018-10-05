@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,7 +30,7 @@ public class LonelyTwitterActivity extends Activity {
 	private static final String FILENAME = "file.sav";
 	private EditText bodyText;
 	private ListView oldTweetsList;
-	private ArrayList<String> tweets = new ArrayList<String>();
+	private ArrayList<ImportantTweet> tweets = new ArrayList<ImportantTweet>();
 	private ArrayAdapter adapter;
 
 	
@@ -51,7 +52,8 @@ public class LonelyTwitterActivity extends Activity {
                 tweets.clear();
                 saveInFile();
                 adapter.notifyDataSetChanged();
-                finish();
+
+
 
             }
         });
@@ -64,9 +66,15 @@ public class LonelyTwitterActivity extends Activity {
 			public void onClick(View v) {
 			    Date date = new Date(System.currentTimeMillis());
 				setResult(RESULT_OK);
+				ImportantTweet newTweet = new ImportantTweet();
 				String text = bodyText.getText().toString();
+				try {
+					newTweet.setMessage(text);
+				} catch (TweetTooLongException e) {
+					e.printStackTrace();
+				}
+				tweets.add(newTweet);
 				saveInFile();
-				tweets.add(text);
 				adapter.notifyDataSetChanged();
 				finish();
 
@@ -78,7 +86,7 @@ public class LonelyTwitterActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 		loadFromFile();
-		adapter = new ArrayAdapter<String>(this,
+		adapter = new ArrayAdapter<ImportantTweet>(this,
 				R.layout.list_item, tweets);
 		oldTweetsList.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
@@ -95,7 +103,7 @@ public class LonelyTwitterActivity extends Activity {
             BufferedReader reader = new BufferedReader(isr);
 
             Gson gson = new Gson();
-            Type listTweetType = new TypeToken<ArrayList<Tweet>>() {
+            Type listTweetType = new TypeToken<ArrayList<ImportantTweet>>() {
             }.getType();
             tweets = gson.fromJson(reader, listTweetType);
             fis.close();
@@ -103,7 +111,7 @@ public class LonelyTwitterActivity extends Activity {
 
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
-            tweets = new ArrayList<String>();
+            tweets = new ArrayList<ImportantTweet>();
             e.printStackTrace();
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -124,6 +132,7 @@ public class LonelyTwitterActivity extends Activity {
 		    Gson gson = new Gson();
 		    gson.toJson(tweets, writer);
 		    writer.flush();
+
 		    fos.close();
 
 		} catch (FileNotFoundException e) {

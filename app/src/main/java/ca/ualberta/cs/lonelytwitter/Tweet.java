@@ -18,9 +18,12 @@ import java.util.Date;
 
 public abstract class Tweet implements Tweetable {
 
+
     private Date date;
     private String message;
     private static final Integer MAX_CHARS = 140;
+
+    public Tweet(){  date = new Date();}
 
     public String getMessage() {
         return this.message;
